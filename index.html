@@ -163,6 +163,52 @@ select, input{ font-family:inherit; }
 /* 管理画面固有 */
 .admin-main .row-slots{ --row-h:80px; }
 
+/* ============================================================
+   告知欄（画面最下段）
+   ============================================================ */
+.notice-bar{
+  flex-shrink:0; margin-top:10px; border-radius:10px; padding:10px 18px;
+  font-weight:700; line-height:1.55; white-space:pre-wrap; word-break:break-word;
+  box-shadow:var(--shadow-card); position:relative;
+}
+.notice-bar.size-s{ font-size:13px; }
+.notice-bar.size-m{ font-size:15px; }
+.notice-bar.size-l{ font-size:19px; }
+.notice-bar.align-left{ text-align:left; }
+.notice-bar.align-center{ text-align:center; }
+.admin-main .notice-bar{ cursor:pointer; }
+.admin-main .notice-bar:hover{ box-shadow:0 0 0 3px rgba(95,199,228,.6); }
+.notice-bar .notice-tag{
+  position:absolute; top:4px; right:8px; font-size:10px; font-weight:700; line-height:1.4;
+  background:rgba(11,37,48,.75); color:#fff; border-radius:10px; padding:1px 9px;
+  opacity:0; transition:opacity .15s ease; pointer-events:none; white-space:nowrap;
+}
+.admin-main .notice-bar:hover .notice-tag{ opacity:1; }
+.notice-empty{
+  flex-shrink:0; width:100%; margin-top:10px; padding:11px 10px; border-radius:10px;
+  border:1.5px dashed #9FB1B5; background:#fff; color:var(--ink-500); font-weight:700; font-size:12.5px;
+}
+.notice-empty:hover{ background:var(--paper-50); color:var(--ink-700); }
+.signage-main .notice-bar{ margin-top:1.2vh; border-radius:12px; padding:1.1vh 1.6vw; box-shadow:0 3px 10px rgba(0,0,0,.3); }
+.signage-main .notice-bar.size-s{ font-size:clamp(11px,1.0vw,15px); }
+.signage-main .notice-bar.size-m{ font-size:clamp(13px,1.35vw,21px); }
+.signage-main .notice-bar.size-l{ font-size:clamp(15px,1.8vw,28px); }
+.signage-main.has-notice .row-slots{ --row-h:clamp(50px,6.5vh,90px); }
+
+/* 告知欄・コピー モーダル用 */
+textarea.text-field{ resize:vertical; line-height:1.5; min-height:70px; }
+.radio-line{ display:flex; align-items:center; gap:7px; font-size:13px; color:var(--ink-700); margin:6px 0; cursor:pointer; }
+.radio-line input{ width:15px; height:15px; }
+.symbol-row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:8px; }
+.symbol-row .symbol-label{ font-size:11px; color:var(--ink-500); font-weight:700; margin-right:2px; }
+.symbol-btn{ min-width:32px; height:28px; padding:0 8px; border-radius:6px; border:1px solid var(--line); background:#fff; font-size:14px; font-weight:700; color:var(--ink-700); }
+.symbol-btn:hover{ background:var(--paper-100); }
+.theme-chip{ padding:6px 12px; border-radius:20px; border:1.5px solid rgba(11,37,48,.25); font-size:12px; font-weight:700; }
+.theme-chip:hover{ box-shadow:0 0 0 3px rgba(95,199,228,.45); }
+.copy-lead{ font-size:13px; color:var(--ink-700); line-height:1.6; }
+.copy-summary{ font-size:12px; color:var(--ink-500); margin-top:8px; line-height:1.5; }
+#noticePreview{ margin-top:0; cursor:default; }
+
 /* ツールチップ */
 #hoverTooltip{
   position:fixed; z-index:200; max-width:280px; background:var(--navy-900); color:#fff;
@@ -182,7 +228,7 @@ select, input{ font-family:inherit; }
 .signage-date-badge .d-text{ font-size:clamp(15px,1.7vw,24px); font-weight:800; color:var(--navy-900); background:var(--pink-200); padding:4px 14px; border-radius:8px; }
 .signage-clock .time{ font-size:clamp(20px,2.6vw,34px); font-weight:800; font-variant-numeric:tabular-nums; color:var(--aqua-300); margin-left:12px; }
 
-.signage-main{ flex:1; padding:0 2.6vw 2vh; min-height:0; display:flex; }
+.signage-main{ flex:1; padding:0 2.6vw 2vh; min-height:0; display:flex; flex-direction:column; }
 .signage-main .table-wrap{ flex:1; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.1); border-radius:16px; overflow:auto; box-shadow:none; }
 .signage-main .sched-head{ background:rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.12); }
 .signage-main .sched-head .corner-cell{ color:var(--paper-100); border-right:1px solid rgba(255,255,255,.12); font-size:clamp(12px,1vw,16px); }
@@ -279,10 +325,12 @@ select, input{ font-family:inherit; }
           <button class="nav-btn" id="nextDayBtn" title="翌日">›</button>
           <input type="date" id="hiddenDateInput">
         </div>
+        <button class="btn btn-ghost btn-sm" id="openCopyBtn" title="表示中の日へ、別の日の予定をコピーします">📋 他の日からコピー</button>
       </div>
       <div class="actions">
         <button class="btn btn-ghost btn-sm" id="openFacilitiesBtn">🏢 施設を編集</button>
         <button class="btn btn-ghost btn-sm" id="openPresetsBtnHeader">🏷 プリセットを編集</button>
+        <button class="btn btn-ghost btn-sm" id="openNoticeBtn">📢 告知欄を編集</button>
         <button class="btn btn-ghost btn-sm" id="importBtn">⬇ インポート</button>
         <button class="btn btn-ghost btn-sm" id="exportBtn">⬆ エクスポート</button>
         <button class="btn btn-primary btn-sm" id="toSignageBtn">表示画面へ ▶</button>
@@ -293,7 +341,7 @@ select, input{ font-family:inherit; }
         <h2>予定プリセット</h2>
         <div id="presetPool"></div>
         <button class="add-preset-btn" id="addPresetBtn">＋ プリセットを追加</button>
-        <div class="sidebar-hint">プリセットを枠へドラッグ＆ドロップすると予定を配置できます。空いている枠をクリックしても追加できます。既存の予定はダブルクリックで編集、左右の端をつまんで時間帯を変更、本体をつまんで別の時間帯や施設へ移動できます。</div>
+        <div class="sidebar-hint">プリセットを枠へドラッグ＆ドロップすると予定を配置できます。空いている枠をクリックしても追加できます。既存の予定はダブルクリックで編集、左右の端をつまんで時間帯を変更、本体をつまんで別の時間帯や施設へ移動できます。新しい日付を選ぶと、他の日の予定をコピーして始められます。画面最下段の告知欄は、帯をクリックするか「📢 告知欄を編集」から変更できます。</div>
         <div class="sidebar-footer">
           <button class="btn btn-plain btn-sm" id="resetBtn">初期状態に戻す</button>
           <div class="credit-line">Created for public space digital signage (Free / Standalone Edition)</div>
@@ -304,6 +352,7 @@ select, input{ font-family:inherit; }
           <div class="sched-head" id="adminHead"></div>
           <div id="adminRows"></div>
         </div>
+        <div id="adminNotice"></div>
       </div>
     </div>
   </div>
@@ -319,11 +368,12 @@ select, input{ font-family:inherit; }
         <div class="signage-clock"><span class="time" id="signageTime">--:--</span></div>
       </div>
     </div>
-    <div class="signage-main">
+    <div class="signage-main" id="signageMain">
       <div class="table-wrap">
         <div class="sched-head" id="signageHead"></div>
         <div id="signageRows"></div>
       </div>
+      <div id="signageNotice"></div>
     </div>
     <button class="corner-btn" id="toAdminBtn" title="管理画面へ">⚙</button>
   </div>
@@ -431,6 +481,100 @@ select, input{ font-family:inherit; }
   </div>
 </div>
 
+<!-- ============================================================
+     他の日の予定をコピー モーダル
+     ============================================================ -->
+<div class="modal-overlay" id="copyModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>他の日の予定をコピー</h3>
+      <div class="tag" id="copyTargetTag">-</div>
+    </div>
+    <div class="modal-body">
+      <div class="copy-lead" id="copyLead"></div>
+      <div class="field-label">コピー元の日付（日付が近い順）</div>
+      <select class="text-field" id="copySourceSelect"></select>
+      <div class="copy-summary" id="copySummary"></div>
+      <div id="copyModeWrap" style="display:none;">
+        <div class="field-label">この日にすでにある予定の扱い</div>
+        <label class="radio-line"><input type="radio" name="copyMode" value="merge" checked> 空いている枠にだけ追加する（既存の予定は残す）</label>
+        <label class="radio-line"><input type="radio" name="copyMode" value="replace"> 既存の予定をすべて置き換える</label>
+      </div>
+      <div id="copyNoticeWrap" style="display:none; margin-top:10px;">
+        <label class="radio-line"><input type="checkbox" id="copyNoticeCheck" checked> コピー元の「この日だけの告知欄」もコピーする</label>
+      </div>
+      <div class="error-msg" id="copyError"></div>
+    </div>
+    <div class="modal-foot">
+      <div></div>
+      <div class="right-group">
+        <button class="btn btn-plain" id="copyCancelBtn">キャンセル</button>
+        <button class="btn btn-primary" id="copyExecBtn">コピーする</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     告知欄 編集モーダル
+     ============================================================ -->
+<div class="modal-overlay" id="noticeModalOverlay">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3>告知欄の編集</h3>
+      <div class="tag" id="noticeDateTag">-</div>
+    </div>
+    <div class="modal-body">
+      <div class="field-label toggle-row" style="margin-top:4px;">
+        <span>表示</span>
+        <label class="toggle-label"><input type="checkbox" id="noticeEnabled"> 画面最下段に告知欄を表示する</label>
+      </div>
+
+      <div class="field-label">告知文（Enterで改行できます）</div>
+      <textarea class="text-field" id="noticeText" rows="3" placeholder="例：＊ 卓球場および黄色の枠は一般開放です。　＊　◎は指導員がおります。"></textarea>
+      <div class="symbol-row" id="noticeSymbols"><span class="symbol-label">記号を挿入</span></div>
+
+      <div class="field-label">配色（ワンクリックで設定）</div>
+      <div class="chip-row" id="noticeThemes"></div>
+      <div class="color-row" style="margin-top:10px;">
+        <input type="color" id="noticeBgColor" value="#F5E23C">
+        <span class="col-sep" style="font-size:12px;">背景</span>
+        <input type="color" id="noticeTextColor" value="#16262B">
+        <span class="col-sep" style="font-size:12px;">文字</span>
+      </div>
+
+      <div class="field-label">文字サイズ・配置</div>
+      <div class="col-row">
+        <select id="noticeSize">
+          <option value="s">文字サイズ：小</option>
+          <option value="m">文字サイズ：標準</option>
+          <option value="l">文字サイズ：大</option>
+        </select>
+        <select id="noticeAlign">
+          <option value="left">配置：左寄せ</option>
+          <option value="center">配置：中央</option>
+        </select>
+      </div>
+
+      <div class="field-label">適用範囲</div>
+      <label class="radio-line"><input type="radio" name="noticeScope" value="common"> すべての日で共通（毎日同じ告知を出す場合）</label>
+      <label class="radio-line"><input type="radio" name="noticeScope" value="day"> <span id="noticeScopeDayLabel">この日だけ</span></label>
+
+      <div class="field-label">プレビュー</div>
+      <div id="noticePreview" class="notice-bar size-m align-center"></div>
+
+      <div class="error-msg" id="noticeError"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" id="noticeClearOverrideBtn" style="display:none;">この日の個別設定を解除</button>
+      <div class="right-group">
+        <button class="btn btn-plain" id="noticeCancelBtn">キャンセル</button>
+        <button class="btn btn-primary" id="noticeSaveBtn">保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
 "use strict";
@@ -472,6 +616,16 @@ const CONFIG = {
     { name:"文化学園射撃部", color:"#8A7A5C", textColor:"#FFFFFF" },
     { name:"全国少年相撲連盟", color:"#8A7A5C", textColor:"#FFFFFF" }
   ],
+  // 画面最下段の告知欄の初期値。以後は画面の「告知欄を編集」から変更できます。
+  //   size: "s"(小) / "m"(標準) / "l"(大)　align: "left"(左寄せ) / "center"(中央)
+  DEFAULT_NOTICE: {
+    enabled: true,
+    text: "＊ 卓球場および「一般開放」と記載の枠は一般開放です。　＊　◎は指導員がおります。",
+    bgColor: "#F5E23C",
+    textColor: "#16262B",
+    size: "m",
+    align: "center"
+  },
   // 初期表示日と、その日のサンプル予定（写真の内容を再現）
   DEFAULT_DATE: "2026-09-12"
 };
@@ -557,12 +711,34 @@ function sampleSchedule(facilities){
   return blocks;
 }
 
+/* 告知欄データの正規化（不足項目は既定値で補う） */
+function normalizeNotice(n){
+  const d = CONFIG.DEFAULT_NOTICE;
+  n = (n && typeof n === "object") ? n : {};
+  const isHex = v => typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
+  return {
+    enabled: n.enabled == null ? true : !!n.enabled,
+    text: typeof n.text === "string" ? n.text : "",
+    bgColor: isHex(n.bgColor) ? n.bgColor : d.bgColor,
+    textColor: isHex(n.textColor) ? n.textColor : d.textColor,
+    size: ["s","m","l"].indexOf(n.size) >= 0 ? n.size : "m",
+    align: ["left","center"].indexOf(n.align) >= 0 ? n.align : "center"
+  };
+}
+function normalizeNoticeMap(map){
+  const out = {};
+  if(map && typeof map === "object"){
+    Object.keys(map).forEach(k=>{ if(map[k] && typeof map[k] === "object") out[k] = normalizeNotice(map[k]); });
+  }
+  return out;
+}
+
 function buildDefaultData(){
   const facilities = CONFIG.DEFAULT_FACILITIES.map(f=>({ id:uid("fac"), name:f.name, floor:f.floor }));
   const presets = CONFIG.DEFAULT_PRESETS.map(p=>({ id:uid("pr"), name:p.name, color:p.color, textColor:p.textColor||"#FFFFFF" }));
   const schedules = {};
   schedules[CONFIG.DEFAULT_DATE] = sampleSchedule(facilities);
-  return { facilities, presets, schedules, currentDate: CONFIG.DEFAULT_DATE };
+  return { facilities, presets, schedules, currentDate: CONFIG.DEFAULT_DATE, notice: normalizeNotice(CONFIG.DEFAULT_NOTICE), notices: {} };
 }
 
 function normalizeData(parsed){
@@ -571,7 +747,10 @@ function normalizeData(parsed){
     facilities: Array.isArray(parsed.facilities) && parsed.facilities.length ? parsed.facilities : base.facilities,
     presets: Array.isArray(parsed.presets) ? parsed.presets : base.presets,
     schedules: (parsed.schedules && typeof parsed.schedules === "object") ? parsed.schedules : {},
-    currentDate: typeof parsed.currentDate === "string" ? parsed.currentDate : dateKey(new Date())
+    currentDate: typeof parsed.currentDate === "string" ? parsed.currentDate : dateKey(new Date()),
+    // 告知欄：旧バージョンのデータ（告知欄なし）は「非表示・空」で読み込み、勝手にサンプル文を出さない
+    notice: parsed.notice ? normalizeNotice(parsed.notice) : normalizeNotice({ enabled:false, text:"" }),
+    notices: normalizeNoticeMap(parsed.notices)
   };
   data.facilities.forEach(f=>{ if(!f.id) f.id = uid("fac"); if(f.floor==null) f.floor=""; });
   data.presets.forEach(p=>{ if(!p.id) p.id = uid("pr"); if(!p.color) p.color = "#4A98C9"; if(!p.textColor) p.textColor = "#FFFFFF"; });
@@ -646,9 +825,7 @@ function shiftDay(delta){
   const d = parseDateKey(DATA.currentDate);
   d.setDate(d.getDate()+delta);
   DATA.currentDate = dateKey(d);
-  saveData();
-  refreshDateDisplays();
-  renderAll();
+  afterDateChanged();
 }
 dateText.addEventListener("click", ()=>{
   if(hiddenDateInput.showPicker){ try{ hiddenDateInput.showPicker(); return; }catch(e){} }
@@ -657,9 +834,7 @@ dateText.addEventListener("click", ()=>{
 hiddenDateInput.addEventListener("change", ()=>{
   if(!hiddenDateInput.value) return;
   DATA.currentDate = hiddenDateInput.value;
-  saveData();
-  refreshDateDisplays();
-  renderAll();
+  afterDateChanged();
 });
 
 /* ============================================================
@@ -911,6 +1086,7 @@ function renderAll(){
   refreshDateDisplays();
   renderAdmin();
   renderSignage();
+  renderNotices();
 }
 
 /* ============================================================
@@ -1239,6 +1415,292 @@ document.getElementById("savePresetsModalBtn").addEventListener("click", ()=>{
 });
 
 /* ============================================================
+   他の日の予定をコピー
+   ============================================================ */
+const copyModalOverlay = document.getElementById("copyModalOverlay");
+const copyTargetTag = document.getElementById("copyTargetTag");
+const copyLead = document.getElementById("copyLead");
+const copySourceSelect = document.getElementById("copySourceSelect");
+const copySummary = document.getElementById("copySummary");
+const copyModeWrap = document.getElementById("copyModeWrap");
+const copyNoticeWrap = document.getElementById("copyNoticeWrap");
+const copyNoticeCheck = document.getElementById("copyNoticeCheck");
+const copyError = document.getElementById("copyError");
+const copyCancelBtn = document.getElementById("copyCancelBtn");
+const copySkip = new Set();   // 「空のまま始める」を選んだ日（今回の起動中は再度たずねない）
+let copyAuto = false;
+
+function dayHasNoBlocks(key){ return !(DATA.schedules[key] && DATA.schedules[key].length); }
+function isDayEmpty(key){ return dayHasNoBlocks(key) && !DATA.notices[key]; }
+
+function copyCandidates(target){
+  const tms = parseDateKey(target).getTime();
+  return Object.keys(DATA.schedules)
+    .filter(k=> k!==target && Array.isArray(DATA.schedules[k]) && DATA.schedules[k].length>0)
+    .sort((a,b)=>{
+      const da = Math.abs(parseDateKey(a).getTime()-tms), db = Math.abs(parseDateKey(b).getTime()-tms);
+      return da!==db ? da-db : (a<b ? -1 : 1);
+    });
+}
+
+function updateCopySummary(){
+  const src = copySourceSelect.value;
+  const n = (DATA.schedules[src] || []).length;
+  copySummary.textContent = "コピーされる内容：予定 " + n + " 件（施設・時間帯・色・文字装飾を含む）";
+  copyNoticeWrap.style.display = DATA.notices[src] ? "" : "none";
+}
+
+function openCopyModal(auto){
+  const target = DATA.currentDate;
+  const cands = copyCandidates(target);
+  if(!cands.length){
+    if(!auto) alert("コピーできる予定がありません。\n他の日付に予定を登録すると、ここからコピーできるようになります。");
+    return;
+  }
+  copyAuto = !!auto;
+  const targetD = parseDateKey(target);
+  const hasExisting = !dayHasNoBlocks(target);
+  copyTargetTag.textContent = "コピー先：" + formatDateJP(targetD);
+  copyLead.textContent = hasExisting
+    ? "この日にはすでに予定があります。コピー元と、既存の予定の扱いを選んでください。"
+    : (auto ? "この日はまだ予定が登録されていません。他の日の予定をコピーして、作り始めることができます。"
+            : "選んだ日の予定を、この日へコピーします。");
+  copySourceSelect.innerHTML = "";
+  cands.forEach(k=>{
+    const d = parseDateKey(k);
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = formatDateJP(d) + (d.getDay()===targetD.getDay() ? "　★同じ曜日" : "") + "　（予定 " + DATA.schedules[k].length + " 件）";
+    copySourceSelect.appendChild(o);
+  });
+  copyModeWrap.style.display = hasExisting ? "" : "none";
+  document.querySelector('input[name="copyMode"][value="merge"]').checked = true;
+  copyNoticeCheck.checked = true;
+  copyCancelBtn.textContent = auto ? "空のまま始める" : "キャンセル";
+  copyError.textContent = "";
+  updateCopySummary();
+  copyModalOverlay.classList.add("active");
+}
+function closeCopyModal(){
+  if(copyAuto) copySkip.add(DATA.currentDate);
+  copyModalOverlay.classList.remove("active");
+}
+copySourceSelect.addEventListener("change", updateCopySummary);
+copyCancelBtn.addEventListener("click", closeCopyModal);
+copyModalOverlay.addEventListener("click", (e)=>{ if(e.target===copyModalOverlay) closeCopyModal(); });
+document.getElementById("openCopyBtn").addEventListener("click", ()=> openCopyModal(false));
+
+document.getElementById("copyExecBtn").addEventListener("click", ()=>{
+  const target = DATA.currentDate;
+  const src = copySourceSelect.value;
+  if(!src || !Array.isArray(DATA.schedules[src])){ copyError.textContent = "コピー元を選んでください。"; return; }
+  const hasExisting = !dayHasNoBlocks(target);
+  const mode = hasExisting ? document.querySelector('input[name="copyMode"]:checked').value : "replace";
+  const dest = (mode==="replace") ? [] : currentBlocks();
+  let added = 0, skipped = 0;
+  DATA.schedules[src].forEach(b=>{
+    const overlap = dest.some(x=> x.facilityId===b.facilityId && !(b.endCol < x.startCol || b.startCol > x.endCol));
+    if(!getFacility(b.facilityId) || overlap){ skipped++; return; }
+    const c = deepClone(b);
+    c.id = uid("ev");
+    dest.push(c);
+    added++;
+  });
+  DATA.schedules[target] = dest;
+  const noticeCopied = copyNoticeWrap.style.display !== "none" && copyNoticeCheck.checked && DATA.notices[src];
+  if(noticeCopied) DATA.notices[target] = deepClone(DATA.notices[src]);
+  copySkip.add(target);
+  saveData();
+  renderAll();
+  copyModalOverlay.classList.remove("active");
+  if(skipped>0) alert(added + " 件の予定をコピーしました。\n（重なる予定などで " + skipped + " 件はコピーしませんでした）");
+});
+
+/* 日付を切り替えた直後：予定が空の日なら、コピーするかどうかをたずねる */
+function afterDateChanged(){
+  saveData();
+  refreshDateDisplays();
+  renderAll();
+  const key = DATA.currentDate;
+  if(!copySkip.has(key) && isDayEmpty(key)) openCopyModal(true);
+}
+
+/* ============================================================
+   告知欄（画面最下段）
+   ============================================================ */
+const NOTICE_THEMES = [
+  { label:"黄（一般開放）", bg:"#F5E23C", text:"#16262B" },
+  { label:"白",             bg:"#FFFFFF", text:"#16262B" },
+  { label:"水色",           bg:"#BFE6F2", text:"#0B2530" },
+  { label:"桃色",           bg:"#F3D2D9", text:"#0B2530" },
+  { label:"赤（重要）",     bg:"#C0392B", text:"#FFFFFF" },
+  { label:"紺",             bg:"#123B4A", text:"#FFFFFF" }
+];
+const NOTICE_SYMBOLS = [
+  { ch:"＊", label:"＊" }, { ch:"◎", label:"◎" }, { ch:"※", label:"※" },
+  { ch:"●", label:"●" }, { ch:"▲", label:"▲" }, { ch:"　", label:"全角空白" }
+];
+
+/* 表示中の日に適用される告知欄（その日だけの設定があれば優先、なければ共通） */
+function getEffectiveNotice(){
+  const o = DATA.notices[DATA.currentDate];
+  return o ? { n:o, scope:"day" } : { n:DATA.notice, scope:"common" };
+}
+function noticeVisible(n){ return !!(n && n.enabled && n.text && n.text.trim()); }
+
+function buildNoticeBar(n, scope, interactive){
+  const el = document.createElement("div");
+  el.className = "notice-bar size-" + n.size + " align-" + n.align;
+  el.style.background = n.bgColor;
+  el.style.color = n.textColor;
+  el.textContent = n.text;
+  if(interactive){
+    el.title = "クリックして告知欄を編集";
+    const tag = document.createElement("span");
+    tag.className = "notice-tag";
+    tag.textContent = (scope==="day" ? "この日だけ" : "共通") + "・クリックで編集";
+    el.appendChild(tag);
+    el.addEventListener("click", openNoticeModal);
+  }
+  return el;
+}
+
+function renderNotices(){
+  const { n, scope } = getEffectiveNotice();
+  const visible = noticeVisible(n);
+
+  const adminBox = document.getElementById("adminNotice");
+  adminBox.innerHTML = "";
+  if(visible){
+    adminBox.appendChild(buildNoticeBar(n, scope, true));
+  } else {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "notice-empty";
+    btn.textContent = "＋ 告知欄を追加・編集（画面最下段に表示されます）";
+    btn.addEventListener("click", openNoticeModal);
+    adminBox.appendChild(btn);
+  }
+
+  const signageBox = document.getElementById("signageNotice");
+  const signageMain = document.getElementById("signageMain");
+  signageBox.innerHTML = "";
+  if(visible){
+    signageBox.appendChild(buildNoticeBar(n, scope, false));
+    signageMain.classList.add("has-notice");
+  } else {
+    signageMain.classList.remove("has-notice");
+  }
+}
+
+const noticeModalOverlay = document.getElementById("noticeModalOverlay");
+const noticeDateTag = document.getElementById("noticeDateTag");
+const noticeEnabled = document.getElementById("noticeEnabled");
+const noticeText = document.getElementById("noticeText");
+const noticeBgColor = document.getElementById("noticeBgColor");
+const noticeTextColor = document.getElementById("noticeTextColor");
+const noticeSize = document.getElementById("noticeSize");
+const noticeAlign = document.getElementById("noticeAlign");
+const noticePreview = document.getElementById("noticePreview");
+const noticeError = document.getElementById("noticeError");
+const noticeClearOverrideBtn = document.getElementById("noticeClearOverrideBtn");
+const noticeScopeDayLabel = document.getElementById("noticeScopeDayLabel");
+
+function updateNoticePreview(){
+  noticePreview.className = "notice-bar size-" + noticeSize.value + " align-" + noticeAlign.value;
+  noticePreview.style.background = noticeBgColor.value;
+  noticePreview.style.color = noticeTextColor.value;
+  noticePreview.style.opacity = noticeEnabled.checked ? "1" : ".45";
+  noticePreview.textContent = noticeText.value.trim() ? noticeText.value : "（告知文を入力すると、ここに表示されます）";
+}
+function insertAtCursor(ta, str){
+  const st = ta.selectionStart, en = ta.selectionEnd;
+  ta.value = ta.value.slice(0, st) + str + ta.value.slice(en);
+  const pos = st + str.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
+  updateNoticePreview();
+}
+
+(function initNoticeModalParts(){
+  const symBox = document.getElementById("noticeSymbols");
+  NOTICE_SYMBOLS.forEach(sym=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "symbol-btn"; b.textContent = sym.label;
+    b.addEventListener("click", ()=> insertAtCursor(noticeText, sym.ch));
+    symBox.appendChild(b);
+  });
+  const themeBox = document.getElementById("noticeThemes");
+  NOTICE_THEMES.forEach(t=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "theme-chip"; b.textContent = t.label;
+    b.style.background = t.bg; b.style.color = t.text;
+    b.addEventListener("click", ()=>{
+      noticeBgColor.value = t.bg;
+      noticeTextColor.value = t.text;
+      updateNoticePreview();
+    });
+    themeBox.appendChild(b);
+  });
+  [noticeText, noticeBgColor, noticeTextColor].forEach(el=> el.addEventListener("input", updateNoticePreview));
+  [noticeEnabled, noticeSize, noticeAlign].forEach(el=> el.addEventListener("change", updateNoticePreview));
+})();
+
+function openNoticeModal(){
+  const { n, scope } = getEffectiveNotice();
+  noticeDateTag.textContent = formatDateJP(parseDateKey(DATA.currentDate));
+  noticeScopeDayLabel.textContent = "この日だけ（表示中の日付のみ。休館日のお知らせなどに）";
+  noticeText.value = n.text;
+  noticeEnabled.checked = n.text.trim() ? n.enabled : true;
+  noticeBgColor.value = n.bgColor;
+  noticeTextColor.value = n.textColor;
+  noticeSize.value = n.size;
+  noticeAlign.value = n.align;
+  document.querySelector('input[name="noticeScope"][value="' + scope + '"]').checked = true;
+  noticeClearOverrideBtn.style.display = (scope==="day") ? "" : "none";
+  noticeError.textContent = "";
+  updateNoticePreview();
+  noticeModalOverlay.classList.add("active");
+  setTimeout(()=> noticeText.focus(), 0);
+}
+function closeNoticeModal(){ noticeModalOverlay.classList.remove("active"); }
+document.getElementById("openNoticeBtn").addEventListener("click", openNoticeModal);
+document.getElementById("noticeCancelBtn").addEventListener("click", closeNoticeModal);
+noticeModalOverlay.addEventListener("click", (e)=>{ if(e.target===noticeModalOverlay) closeNoticeModal(); });
+
+document.getElementById("noticeSaveBtn").addEventListener("click", ()=>{
+  const text = noticeText.value.trim();
+  if(noticeEnabled.checked && !text){
+    noticeError.textContent = "告知文を入力するか、「表示する」のチェックを外してください。";
+    return;
+  }
+  const n = {
+    enabled: noticeEnabled.checked,
+    text: text,
+    bgColor: noticeBgColor.value,
+    textColor: noticeTextColor.value,
+    size: noticeSize.value,
+    align: noticeAlign.value
+  };
+  const scope = document.querySelector('input[name="noticeScope"]:checked').value;
+  if(scope==="day"){
+    DATA.notices[DATA.currentDate] = n;
+  } else {
+    DATA.notice = n;
+    delete DATA.notices[DATA.currentDate];   // この日の個別設定があれば、共通設定に戻す
+  }
+  saveData();
+  renderAll();
+  closeNoticeModal();
+});
+noticeClearOverrideBtn.addEventListener("click", ()=>{
+  delete DATA.notices[DATA.currentDate];
+  saveData();
+  renderAll();
+  closeNoticeModal();
+});
+
+/* ============================================================
    画面切り替え
    ============================================================ */
 document.getElementById("toSignageBtn").addEventListener("click", ()=>{
@@ -1263,7 +1725,7 @@ function updateClock(){
    初期化・リセット
    ============================================================ */
 document.getElementById("resetBtn").addEventListener("click", ()=>{
-  if(!confirm("施設・プリセット・すべての予定を初期状態に戻します。よろしいですか？")) return;
+  if(!confirm("施設・プリセット・告知欄・すべての予定を初期状態に戻します。よろしいですか？")) return;
   DATA = buildDefaultData();
   saveData();
   renderPresetPool();
